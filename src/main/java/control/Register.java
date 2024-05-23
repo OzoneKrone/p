@@ -59,7 +59,7 @@ public class Register extends HttpServlet {
 			//Aggiungi a AccountUser
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setString(1, email);
-			ps.setString(2, password);
+			ps.setString(2, toHash(password));
 			ps.setString(3, nome);
 			ps.setString(4, cognome);
 			ps.setString(5, indirizzo);
@@ -92,4 +92,19 @@ public class Register extends HttpServlet {
 		}
 		response.sendRedirect(request.getContextPath() + redirectedPage);
 	}
+	
+	private String toHash(String password) {
+        String hashString = null;
+        try {
+            java.security.MessageDigest digest = java.security.MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            hashString = "";
+            for (int i = 0; i < hash.length; i++) {
+                hashString += Integer.toHexString((hash[i] & 0xFF) | 0x100).substring(1, 3);
+            }
+        } catch (java.security.NoSuchAlgorithmException e) {
+            System.out.println(e);
+        }
+        return hashString;
+    }
 }

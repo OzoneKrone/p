@@ -99,18 +99,17 @@ public class Login extends HttpServlet {
 	}
 		
 	private String checkPsw(String psw) {
-		MessageDigest md = null;
-		try {
-			md = MessageDigest.getInstance("MD5");
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		byte[] messageDigest = md.digest(psw.getBytes());
-		BigInteger number = new BigInteger(1, messageDigest);
-		String hashtext = number.toString(16);
-		
-		return hashtext;
-	}
-
+		String hashString = null;
+        try {
+            java.security.MessageDigest digest = java.security.MessageDigest.getInstance("SHA-512");
+            byte[] hash = digest.digest(psw.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            hashString = "";
+            for (int i = 0; i < hash.length; i++) {
+                hashString += Integer.toHexString((hash[i] & 0xFF) | 0x100).substring(1, 3);
+            }
+        } catch (java.security.NoSuchAlgorithmException e) {
+            System.out.println(e);
+        }
+        return hashString;
+    }
 }
