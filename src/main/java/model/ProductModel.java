@@ -120,7 +120,10 @@ public class ProductModel {
 		PreparedStatement preparedStatement2 = null;
 
 		Collection<ProductBean> products = new LinkedList<ProductBean>();
-
+		
+		if(!(where.compareTo("Arredamento Casa")==0 || where.compareTo("Action Figures")==0 || where.compareTo("Gadget")==0)) 	//Se la variabile non è uguale ad una delle categorie consentite
+			where = "Arredamento Casa";																							//viene settatta ad una consentita
+		
 		String selectSQL = "SELECT * FROM " + ProductModel.TABLE_NAME + " WHERE deleted = 'false' AND nomeTipologia = '" + where + "'";
 		String sql2 = "SELECT AVG(votazione) FROM Recensione WHERE codiceProdotto = ?";
 		
